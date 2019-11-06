@@ -5,7 +5,8 @@
 ;; Author: Mateusz Probachta <mateusz.probachta@gmail.com>
 ;; Created: 12 February 2019
 ;; Version: 0.0.1
-;; Package-Requires: ((flymake-quickdef "0.1.1"))
+;; Package-Requires: ((emacs "26.1") (flymake-quickdef "0.1.1"))
+;; URL: https://github.com/beetleman/flymake-joker
 
 ;;; Commentary:
 
@@ -37,10 +38,12 @@
 
 (require 'flymake-quickdef)
 
-(setf flymake-check-joker-regexp
+(setf flymake-joker-search-regexp
       "^.+:\\([[:digit:]]+\\):\\([[:digit:]]+\\): \\([[:alpha:]\\ ]+\\): \\(.+\\)$")
 
-(defun severity-to-type (severity)
+(defun flymake-joker--severity-to-type (severity)
+  "Convert error type raported by joker to keybord accepted by flymake.
+SEVERITY - error type reported by joker"
   (cond
    ((string= severity "Read error") :error)
 
@@ -51,13 +54,16 @@
 
    (t :note)))
 
-(defmacro defn-joker-backend (name dialect)
+(defmacro flymake-joker--defn-checker (name dialect)
+  "Define flymake checker for joker using provided dialect.
+NAME - name of function
+DIALECT - dialect accepted by `--dialect' option"
   `(flymake-quickdef-backend ,name
      :pre-let ((joker-exec (executable-find "joker")))
      :pre-check (unless joker-exec (error "Cannot find joker executable"))
      :write-type 'pipe
      :proc-form (list joker-exec "--lint" "--dialect" ,dialect "-")
-     :search-regexp flymake-check-joker-regexp
+     :search-regexp flymake-joker-search-regexp
      :prep-diagnostic
      (let* ((lnum (string-to-number (match-string 1)))
             (lcol (string-to-number (match-string 2)))
@@ -66,16 +72,16 @@
             (pos (flymake-diag-region fmqd-source lnum lcol))
             (beg (car pos))
             (end (cdr pos))
-            (type (severity-to-type severity)))
+            (type (flymake-joker--severity-to-type severity)))
        (list fmqd-source beg end type msg))))
 
-(defn-joker-backend flymake-joker-clj-cheker "clj")
-(defn-joker-backend flymake-joker-edn-cheker "edn")
-(defn-joker-backend flymake-joker-cljs-cheker "cljs")
+(flymake-joker--defn-checker flymake-joker-clj-cheker "clj")
+(flymake-joker--defn-checker flymake-joker-edn-cheker "edn")
+(flymake-joker--defn-checker flymake-joker-cljs-cheker "cljs")
 
 ;;;###autoload
 (defun flymake-joker-clj-enable ()
-  "Enable joker checker in clj or edn. Ignore clojurescript-mode"
+  "Enable joker checker in clj or edn, ignore `clojurescript-mode'."
   (let ((ext (file-name-extension (buffer-file-name))))
     (when (not (string= "cljs" ext))
       (if (string= "edn" ext)
@@ -84,7 +90,7 @@
 
 ;;;###autoload
 (defun flymake-joker-cljs-enable ()
-  "Enable joker checker in cljs mode"
+  "Enable joker checker in cljs mode."
   (add-hook 'flymake-diagnostic-functions 'flymake-joker-cljs-cheker nil t))
 
 (provide 'flymake-joker)
