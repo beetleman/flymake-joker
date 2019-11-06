@@ -69,21 +69,23 @@
             (type (severity-to-type severity)))
        (list fmqd-source beg end type msg))))
 
-(defn-joker-backend flymake-check-joker-clj "clj")
-(defn-joker-backend flymake-check-joker-edn "edn")
-(defn-joker-backend flymake-check-joker-cljs "cljs")
+(defn-joker-backend flymake-joker-clj-cheker "clj")
+(defn-joker-backend flymake-joker-edn-cheker "edn")
+(defn-joker-backend flymake-joker-cljs-cheker "cljs")
 
-(defun setup-flymake-backend-clj ()
+;;;###autoload
+(defun flymake-joker-clj-enable ()
+  "Enable joker checker in clj or edn. Ignore clojurescript-mode"
   (let ((ext (file-name-extension (buffer-file-name))))
     (when (not (string= "cljs" ext))
-      (flymake-mode 1)
       (if (string= "edn" ext)
-          (add-hook 'flymake-diagnostic-functions 'flymake-check-joker-edn nil t)
-        (add-hook 'flymake-diagnostic-functions 'flymake-check-joker-clj nil t)))))
+          (add-hook 'flymake-diagnostic-functions 'flymake-joker-edn-cheker nil t)
+        (add-hook 'flymake-diagnostic-functions 'flymake-joker-clj-cheker nil t)))))
 
-(defun setup-flymake-backend-cljs ()
-  (flymake-mode 1)
-  (add-hook 'flymake-diagnostic-functions 'flymake-check-joker-cljs nil t))
+;;;###autoload
+(defun flymake-joker-cljs-enable ()
+  "Enable joker checker in cljs mode"
+  (add-hook 'flymake-diagnostic-functions 'flymake-joker-cljs-cheker nil t))
 
 (provide 'flymake-joker)
 
