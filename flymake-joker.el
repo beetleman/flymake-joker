@@ -38,6 +38,8 @@
 
 (require 'flymake-quickdef)
 
+(eval-when-compile
+  (defvar flymake-joker-search-regexp))
 (setf flymake-joker-search-regexp
       "^.+:\\([[:digit:]]+\\):\\([[:digit:]]+\\): \\([[:alpha:]\\ ]+\\): \\(.+\\)$")
 
