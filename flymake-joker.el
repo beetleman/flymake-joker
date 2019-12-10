@@ -85,15 +85,15 @@ DIALECT - dialect accepted by `--dialect' option"
 (defun flymake-joker-clj-enable ()
   "Enable joker checker in clj or edn, ignore `clojurescript-mode'."
   (let ((ext (file-name-extension (buffer-file-name))))
-    (when (not (string= "cljs" ext))
+    (unless (string= "cljs" ext)
       (if (string= "edn" ext)
-          (add-hook 'flymake-diagnostic-functions 'flymake-joker-edn-cheker nil t)
-        (add-hook 'flymake-diagnostic-functions 'flymake-joker-clj-cheker nil t)))))
+          (add-hook 'flymake-diagnostic-functions #'flymake-joker-edn-cheker nil t)
+        (add-hook 'flymake-diagnostic-functions #'flymake-joker-clj-cheker nil t)))))
 
 ;;;###autoload
 (defun flymake-joker-cljs-enable ()
   "Enable joker checker in cljs mode."
-  (add-hook 'flymake-diagnostic-functions 'flymake-joker-cljs-cheker nil t))
+  (add-hook 'flymake-diagnostic-functions #'flymake-joker-cljs-cheker nil t))
 
 (provide 'flymake-joker)
 
