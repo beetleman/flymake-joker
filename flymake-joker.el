@@ -45,7 +45,7 @@
       "^.+:\\([[:digit:]]+\\):\\([[:digit:]]+\\): \\([[:alpha:]\\ ]+\\): \\(.+\\)$")
 
 (defun flymake-joker--severity-to-type (severity)
-  "Convert error type raported by joker to keybord accepted by flymake.
+  "Convert error type reported by joker to keyboard accepted by flymake.
 SEVERITY - error type reported by joker"
   (cond
    ((string= severity "Read error") :error)
@@ -78,9 +78,9 @@ DIALECT - dialect accepted by `--dialect' option"
             (type (flymake-joker--severity-to-type severity)))
        (list fmqd-source beg end type msg))))
 
-(flymake-joker--defn-checker flymake-joker-clj-cheker "clj")
-(flymake-joker--defn-checker flymake-joker-edn-cheker "edn")
-(flymake-joker--defn-checker flymake-joker-cljs-cheker "cljs")
+(flymake-joker--defn-checker flymake-joker-clj-checker "clj")
+(flymake-joker--defn-checker flymake-joker-edn-checker "edn")
+(flymake-joker--defn-checker flymake-joker-cljs-checker "cljs")
 
 ;;;###autoload
 (defun flymake-joker-clj-enable ()
@@ -88,13 +88,13 @@ DIALECT - dialect accepted by `--dialect' option"
   (let ((ext (file-name-extension (buffer-file-name))))
     (unless (string= "cljs" ext)
       (if (string= "edn" ext)
-          (add-hook 'flymake-diagnostic-functions #'flymake-joker-edn-cheker nil t)
-        (add-hook 'flymake-diagnostic-functions #'flymake-joker-clj-cheker nil t)))))
+          (add-hook 'flymake-diagnostic-functions #'flymake-joker-edn-checker nil t)
+        (add-hook 'flymake-diagnostic-functions #'flymake-joker-clj-checker nil t)))))
 
 ;;;###autoload
 (defun flymake-joker-cljs-enable ()
   "Enable joker checker in cljs mode."
-  (add-hook 'flymake-diagnostic-functions #'flymake-joker-cljs-cheker nil t))
+  (add-hook 'flymake-diagnostic-functions #'flymake-joker-cljs-checker nil t))
 
 (provide 'flymake-joker)
 
