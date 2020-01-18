@@ -1,4 +1,4 @@
-;;; flymake-joker.el --- Add Clojure syntax checker (via Joker) to flycheck -*- lexical-binding: t; -*-
+;;; flymake-joker.el --- Add Clojure syntax checker (via Joker) to flymake -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Mateusz Probachta <mateusz.probachta@gmail.com>
 ;;
@@ -10,9 +10,10 @@
 
 ;;; Commentary:
 
-;; This package adds Clojure syntax checker (via Joker) to flycheck.
+;; This package adds Clojure syntax checker (via Joker) to flymake.
 ;; Make sure Joker binary is on your path.
 ;; Joker installation instructions are here: https://github.com/candid82/joker#installation
+;; Its based on https://github.com/candid82/flycheck-joker but use flymake instead flycheck
 
 ;;; License:
 
