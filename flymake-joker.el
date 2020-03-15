@@ -4,7 +4,7 @@
 ;;
 ;; Author: Mateusz Probachta <mateusz.probachta@gmail.com>
 ;; Created: 12 February 2019
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Package-Requires: ((emacs "26.1") (flymake-quickdef "0.1.1"))
 ;; URL: https://github.com/beetleman/flymake-joker
 
@@ -85,7 +85,8 @@ DIALECT - dialect accepted by `--dialect' option"
 ;;;###autoload
 (defun flymake-joker-clj-enable ()
   "Enable joker checker in clj or edn, ignore `clojurescript-mode'."
-  (let ((ext (file-name-extension (buffer-file-name))))
+  (let ((ext (file-name-extension (or (buffer-file-name)
+                                      (buffer-name)))))
     (unless (string= "cljs" ext)
       (if (string= "edn" ext)
           (add-hook 'flymake-diagnostic-functions #'flymake-joker-edn-checker nil t)
